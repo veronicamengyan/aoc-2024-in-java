@@ -3,42 +3,41 @@ package day1;
 import util.Utility;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.IntStream;
 
 public class Main {
     public static void main(final String[] args) throws IOException {
         final List<String> inputs = Utility.readFile("day1", "input1");
-        int sum = 0;
-        for (String input : inputs) {
+        System.out.println(part1(inputs));
+        System.out.println(part2(inputs));
+    }
 
-            // used for part 2
-            input = input.replace("one", "on1ne");
-            input = input.replace("two", "tw2wo");
-            input = input.replace("three", "thre3hree");
-            input = input.replace("four", "fou4our");
-            input = input.replace("five", "fiv5ive");
-            input = input.replace("six", "si6ix");
-            input = input.replace("seven", "seve7even");
-            input = input.replace("eight", "eigh8ight");
-            input = input.replace("nine", "nin9ine");
-            final char[] chars = input.toCharArray();
-            int first = 0;
-            int last = 0;
-
-            //two pointers
-            for (int i = 0, j = chars.length - 1; ((i < chars.length) && (j >= 0)); i++, j--) {
-                if (Character.isDigit(chars[i]) && (first == 0)) {
-                    first = Character.getNumericValue(chars[i]);
-                }
-                if (Character.isDigit(chars[j]) && (last == 0)) {
-                    last = Character.getNumericValue(chars[j]);
-                }
-                if ((first > 0) & (last > 0)) {
-                    break;
-                }
-            }
-            sum += ((first * 10) + last);
+    public static int part1(final List<String> inputs) {
+        final List<Integer> left = new ArrayList<>();
+        final List<Integer> right = new ArrayList<>();
+        for (final String input : inputs) {
+            final String[] split = input.split("\\s+");
+            left.add(Integer.parseInt(split[0].trim()));
+            right.add(Integer.parseInt(split[1].trim()));
         }
-        System.out.println(sum);
+        left.sort(Integer::compareTo);
+        right.sort(Integer::compareTo);
+        return IntStream.range(0, left.size()).map(i -> Math.abs(left.get(i) - right.get(i))).sum();
+    }
+
+    public static int part2(final List<String> inputs) {
+        final List<Integer> left = new ArrayList<>();
+        final Map<Integer, Integer> right = new HashMap<>();
+        for (final String input : inputs) {
+            final String[] split = input.split("\\s+");
+            left.add(Integer.parseInt(split[0].trim()));
+            final Integer rightValue = Integer.parseInt(split[1].trim());
+            right.put(rightValue, right.getOrDefault(rightValue, 0) + 1);
+        }
+        return left.stream().mapToInt(i -> i * right.getOrDefault(i, 0)).sum();
     }
 }
