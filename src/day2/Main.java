@@ -3,9 +3,9 @@ package day2;
 import util.Utility;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 public class Main {
     public static void main(final String[] args) throws IOException {
@@ -14,81 +14,57 @@ public class Main {
         part2(inputs);
     }
 
-    //part 1
-
     private static void part1(final List<String> inputs) {
-        int gameCount = 1;
-        int sum = 0;
+        int safeCount = 0;
         for (final String input : inputs) {
-            final String[] gameResults = input.split(":");
-            final String[] games = gameResults[1].split(";");
-            boolean isPossible = true;
-            for (final String game : games) {
-                final String[] cubes = game.split(",");
-                for (final String cube : cubes) {
-                    if (!checkCubes(cube.trim())) {
-                        isPossible = false;
-                    }
-                }
+            final String[] split = input.split("\\s+");
+            final List<Integer> report = Arrays.stream(split).map(Integer::parseInt).toList();
+            if (isSafe(report)) {
+                safeCount++;
             }
-            if (isPossible) {
-                sum += gameCount;
-            }
-            gameCount++;
         }
-        System.out.println(sum);
+        System.out.println(safeCount);
     }
 
-    // for part 1
-    private static boolean checkCubes(final String cube) {
-        final int redMax = 12;
-        final int greenMax = 13;
-        final int blueMax = 14;
-        final String[] numColor = cube.split("\\s+");
-        final int num = Integer.parseInt(numColor[0]);
-        return switch (numColor[1]) {
-            case "red" -> num <= redMax;
-            case "green" -> num <= greenMax;
-            case "blue" -> num <= blueMax;
-            default -> throw new RuntimeException("parsing error");
-        };
+    private static boolean isSafe(final List<Integer> report) {
+        final int firstNum = report.get(0);
+        final int secondNum = report.get(1);
+        final boolean isIncreasing = firstNum < secondNum;
+        boolean isSafe = true;
+        for (int i = 0; i < (report.size() - 1); i++) {
+            final int current = report.get(i);
+            final int next = report.get(i + 1);
+            if (isIncreasing && (current > next)) {
+                isSafe = false;
+                break;
+            }
+            if (!isIncreasing && (current < next)) {
+                isSafe = false;
+                break;
+            }
+            if ((Math.abs(current - next) > 3) || (Math.abs(current - next) < 1)) {
+                isSafe = false;
+                break;
+            }
+        }
+        return isSafe;
     }
 
     private static void part2(final List<String> inputs) {
-        int sum = 0;
+        int safeCount = 0;
         for (final String input : inputs) {
-            final Map<String, Integer> maxMap = new HashMap<>();
-            maxMap.put("red", 0);
-            maxMap.put("green", 0);
-            maxMap.put("blue", 0);
-            final String[] gameResults = input.split(":");
-            final String[] games = gameResults[1].split(";");
-            for (final String game : games) {
-                final String[] cubes = game.split(",");
-                for (final String cube : cubes) {
-                    updateMap(maxMap, cube.trim());
+            final String[] split = input.split("\\s+");
+            final List<Integer> report = Arrays.stream(split).map(Integer::parseInt).toList();
+            for (int i = 0; i < report.size(); i++) {
+                final List<Integer> currentReport = new ArrayList<>(report);
+                currentReport.remove(i);
+                if (isSafe(currentReport)) {
+                    safeCount++;
+                    break;
                 }
             }
-            sum += maxMap.values().stream().reduce(1, (a, b) -> a * b);
-        }
-        System.out.println(sum);
-    }
 
-    // for part2
-    private static void updateMap(final Map<String, Integer> maxMap, final String cube) {
-        final String[] numColor = cube.split("\\s+");
-        final int num = Integer.parseInt(numColor[0]);
-        switch (numColor[1]) {
-            case "red" -> updateValueIfGreater(maxMap, "red", num);
-            case "green" -> updateValueIfGreater(maxMap, "green", num);
-            case "blue" -> updateValueIfGreater(maxMap, "blue", num);
-            default -> throw new RuntimeException("parsing error");
         }
-    }
-
-    private static void updateValueIfGreater(final Map<String, Integer> maxMap, final String key, final int num) {
-        if (num > maxMap.get(key)) {
-            maxMap.put(key, num);
-        }
+        System.out.println(safeCount);
     }
 }
