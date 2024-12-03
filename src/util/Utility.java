@@ -12,4 +12,10 @@ public class Utility {
 
         return Files.readAllLines(filePath);
     }
+
+    public static String readFileToString(final String day, final String fileName) throws IOException {
+        final Path filePath = Path.of("src/" + day + "/" + fileName + ".txt");
+
+        return Files.readString(filePath);
+    }
 }
