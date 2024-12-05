@@ -3,55 +3,64 @@ package day4;
 import util.Utility;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
 
 public class Main {
     public static void main(final String[] args) throws IOException {
         final List<String> inputs = Utility.readFile("day4", "input1");
-        part1(inputs);
-        part2(inputs);
+        // initialize grid
+        final char[][] grid = new char[inputs.size()][inputs.get(0).length()];
+        for (int i = 0; i < inputs.size(); i++) {
+            final String input = inputs.get(i);
+            final char[] letters = input.toCharArray();
+            for (int j = 0; j < letters.length; j++) {
+                grid[i][j] = letters[j];
+            }
+        }
+        part1(grid);
+        part2(grid);
     }
 
-    public static void part2(final List<String> inputs) {
-        int cardNumber = 1;
-        final Map<Integer, Integer> cardNumberToPoints = new HashMap<>();
-        for (String input : inputs) {
-            input = input.substring(input.indexOf(":") + 1);
-            input = input.trim();
-            final String[] splitStrs = input.split("\\|");
-            final String winningNums = splitStrs[0];
-            final String[] winningNumsArray = winningNums.split("\\s+");
-            final Set<String> winningNumbers = new HashSet<>(Arrays.asList(winningNumsArray));
-            final String numsIHave = splitStrs[1];
-            final String[] numsIHaveArray = numsIHave.split("\\s+");
-            int counter = 0;
-            for (final String s : numsIHaveArray) {
-                if (winningNumbers.contains(s)) {
-                    counter++;
+    public static void part1(final char[][] grid) {
+        int sum = 0;
+
+        // check rows
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < (grid[0].length - 3); j++) {
+                final String fourLetters = "" + grid[i][j] + grid[i][j + 1] + grid[i][j + 2] + grid[i][j + 3];
+                //System.out.println(fourLetters);
+                if ("XMAS".equals(fourLetters) || "SAMX".equals(fourLetters)) {
+                    sum += 1;
                 }
             }
-            if (counter > 0) {
-                cardNumberToPoints.put(cardNumber, counter);
+        }
+
+        // check columns
+        for (int i = 0; i < (grid[0].length - 3); i++) {
+            for (int j = 0; j < grid.length; j++) {
+                final String fourLetters = "" + grid[i][j] + grid[i + 1][j] + grid[i + 2][j] + grid[i + 3][j];
+                if ("XMAS".equals(fourLetters) || "SAMX".equals(fourLetters)) {
+                    sum += 1;
+                }
             }
-            cardNumber++;
         }
 
-
-        final Queue<Integer> cards = new LinkedList<>();
-
-        // add all original cards to the queue
-        for (int i = 1; i <= 196; i++) {
-            cards.add(i);
+        // check diagonals
+        for (int i = 0; i < (grid.length - 3); i++) {
+            for (int j = 0; j < (grid[0].length - 3); j++) {
+                final String fourLetters = "" + grid[i][j] + grid[i + 1][j + 1] + grid[i + 2][j + 2] + grid[i + 3][j + 3];
+                if ("XMAS".equals(fourLetters) || "SAMX".equals(fourLetters)) {
+                    sum += 1;
+                }
+            }
         }
 
-        int sum = 0;
-        while (!cards.isEmpty()) {
-            final int cur = cards.poll();
-            sum += 1;
-            if (cardNumberToPoints.containsKey(cur)) {
-                final int counter = cardNumberToPoints.get(cur);
-                for (int i = cur + 1; i <= (cur + counter); i++) {
-                    cards.offer(i);
+        // check the other diagonals
+        for (int i = grid.length - 1; i >= 3; i--) {
+            for (int j = 0; j < (grid[0].length - 3); j++) {
+                final String fourLetters = "" + grid[i][j] + grid[i - 1][j + 1] + grid[i - 2][j + 2] + grid[i - 3][j + 3];
+                if ("XMAS".equals(fourLetters) || "SAMX".equals(fourLetters)) {
+                    sum += 1;
                 }
             }
         }
@@ -59,28 +68,51 @@ public class Main {
         System.out.println(sum);
     }
 
-    public static void part1(final List<String> inputs) {
-        int sum = 0;
-        for (String input : inputs) {
-            input = input.substring(input.indexOf(":") + 1);
-            input = input.trim();
-            final String[] splitStrs = input.split("\\|");
-            final String winningNums = splitStrs[0];
-            final String[] winningNumsArray = winningNums.split("\\s+");
-            final Set<String> winningNumbers = new HashSet<>(Arrays.asList(winningNumsArray));
-            final String numsIHave = splitStrs[1];
-            final String[] numsIHaveArray = numsIHave.split("\\s+");
-            int counter = 0;
-            for (String s : numsIHaveArray) {
-                if (winningNumbers.contains(s)) {
-                    counter++;
+    public static void part2(final char[][] grid) {
+        final char[][] xmas1 = {
+                {'M', '.', 'S' },
+                {'.', 'A', '.' },
+                {'M', '.', 'S' }
+        };
+        final char[][] xmas2 = {
+                {'S', '.', 'M' },
+                {'.', 'A', '.' },
+                {'S', '.', 'M' }
+        };
+        final char[][] xmas3 = {
+                {'S', '.', 'S' },
+                {'.', 'A', '.' },
+                {'M', '.', 'M' }
+        };
+        final char[][] xmas4 = {
+                {'M', '.', 'M' },
+                {'.', 'A', '.' },
+                {'S', '.', 'S' }
+        };
+        int count = 0;
+        for (int i = 0; i < (grid.length - 2); i++) {
+            for (int j = 0; j < (grid[0].length - 2); j++) {
+                if (isMatch(i, j, grid, xmas1) || isMatch(i, j, grid, xmas2) || isMatch(i, j, grid, xmas3) || isMatch(i, j, grid, xmas4)) {
+                    count++;
                 }
             }
-            if (counter > 0) {
-                sum += Math.pow(2, counter - 1);
+        }
+        System.out.println(count);
+    }
+
+    private static boolean isMatch(final int i, final int j, final char[][] grid, final char[][] xmas) {
+        // check 3 X 3 grid
+        for (int k = 0; k < 3; k++) {
+            for (int l = 0; l < 3; l++) {
+                if (((k == 1) && (l != 1)) || ((k != 1) && (l == 1))) {
+                    continue;
+                }
+                if (grid[i + k][j + l] != xmas[k][l]) {
+                    return false;
+                }
             }
         }
 
-        System.out.println(sum);
+        return true;
     }
 }
