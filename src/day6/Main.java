@@ -1,49 +1,122 @@
 package day6;
 
+import util.Pair;
 import util.Utility;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Main {
     public static void main(final String[] args) throws IOException {
-        final List<String> inputs = Utility.readFile("day6", "input1");
-        part1(inputs);
-
-        //part2
-        final long time = Long.parseLong(inputs.get(0).substring(inputs.get(0).indexOf(":") + 1).trim().replaceAll("\\s", ""));
-        final long distance = Long.parseLong(inputs.get(1).substring(inputs.get(1).indexOf(":") + 1).trim().replaceAll("\\s", ""));
-        int ways = 0;
-        for (long t = 1; t < time; t++) {
-            final long y = (time - t) * t;
-            if (y > distance) {
-                ways++;
-            }
-        }
-
-        System.out.println(ways);
+        solution();
     }
 
-    public static void part1(final List<String> inputs) {
-        final String[] timeStr = inputs.get(0).substring(inputs.get(0).indexOf(":") + 1).trim().split("\\s+");
-        final String[] distanceStr = inputs.get(1).substring(inputs.get(1).indexOf(":") + 1).trim().split("\\s+");
-        final List<Race> races = new ArrayList<>();
-        for (int i = 0; i < timeStr.length; i++) {
-            races.add(new Race(Integer.parseInt(timeStr[i]), Integer.parseInt(distanceStr[i])));
-        }
-        int sum = 1;
-        for (final Race race : races) {
-            int ways = 0;
-            for (int t = 1; t < race.getTime(); t++) {
-                final int y = (race.getTime() - t) * t;
-                if (y > race.getDistance()) {
-                    ways++;
+    public static void solution() throws IOException {
+        final char[][] grid = Utility.readFileIntoGrid("day6", "input1");
+        final Map<Integer, Pair> directions = Map.of(
+                0, new Pair(-1, 0), //up
+                1, new Pair(0, 1), //right
+                2, new Pair(1, 0), //down
+                3, new Pair(0, -1) //left
+        );
+
+        // find starting position
+        int rowStart = 0;
+        int colStart = 0;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                if (grid[i][j] == '^') {
+                    rowStart = i;
+                    colStart = j;
+                    break;
                 }
             }
-            sum *= ways;
+        }
+
+        //traverse the grid
+        int direction = 0;
+        int row = rowStart;
+        int col = colStart;
+
+        while ((row >= 0) && (row < grid.length) && (col >= 0) && (col < grid[0].length)) {
+            final int dx = directions.get(direction).getFirst();
+            final int dy = directions.get(direction).getSecond();
+            if (((row + dx) < 0) || ((row + dx) >= grid.length) || ((col + dy) < 0) || ((col + dy) >= grid[0].length)) {
+                break;
+            }
+            if (grid[row + dx][col + dy] == '#') {
+                direction = (direction + 1) % 4;
+            } else {
+                row += dx;
+                col += dy;
+                grid[row][col] = 'X';
+            }
+        }
+
+        // check path
+        // used for part2
+        List<Pair> paths = new ArrayList<>();
+        int sum = 0;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                if ((grid[i][j] == 'X') || (grid[i][j] == '^')) {
+                    sum++;
+                    if (grid[i][j] == 'X') {
+                        paths.add(new Pair(i, j));
+                    }
+                }
+            }
         }
 
         System.out.println(sum);
+
+        //part 2
+        int solutions = 0;
+        final Map<Integer, Character> directionMark = Map.of(
+                0, '^', //up
+                1, '@', //right
+                2, '$', //down
+                3, '%' //left
+        );
+        for (final Pair path : paths) {
+
+            //get a fresh copy
+            final char[][] grid2 = Utility.readFileIntoGrid("day6", "input1");
+            direction = 0;
+            row = rowStart;
+            col = colStart;
+
+            //cannot put an obstacle at starting guard position
+            if ((path.getFirst() == rowStart) && (path.getSecond() == colStart)) {
+                continue;
+            }
+
+            //put an obstacle in the path
+            grid2[path.getFirst()][path.getSecond()] = '#';
+
+            while ((row >= 0) && (row < grid2.length) && (col >= 0) && (col < grid2[0].length)) {
+                final int dx = directions.get(direction).getFirst();
+                final int dy = directions.get(direction).getSecond();
+                if (((row + dx) < 0) || ((row + dx) >= grid2.length) || ((col + dy) < 0) || ((col + dy) >= grid2[0].length)) {
+                    break;
+                }
+                if (grid2[row + dx][col + dy] == '#') {
+                    direction = (direction + 1) % 4;
+                } else {
+                    row += dx;
+                    col += dy;
+
+                    //to check for loop, not only we want to check for the same position but also same direction
+                    if (grid2[row][col] == directionMark.get(direction)) {
+                        solutions++;
+                        break;
+                    }
+                    grid2[row][col] = directionMark.get(direction);
+                }
+            }
+        }
+        System.out.println(solutions);
     }
 }
