@@ -4,6 +4,8 @@ import util.Pair;
 import util.Utility;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +59,7 @@ public class Main {
 
         // check path
         // used for part2
-        List<Pair> paths = new ArrayList<>();
+        final List<Pair> paths = new ArrayList<>();
         int sum = 0;
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[0].length; j++) {
@@ -73,6 +75,7 @@ public class Main {
         System.out.println(sum);
 
         //part 2
+        final Instant start = Instant.now();
         int solutions = 0;
         final Map<Integer, Character> directionMark = Map.of(
                 0, '^', //up
@@ -117,6 +120,9 @@ public class Main {
                 }
             }
         }
+        final Instant end = Instant.now();
+        final Duration duration = Duration.between(start, end);
+        System.out.println("Code execution time: " + duration.getSeconds() + " seconds");
         System.out.println(solutions);
     }
 }
