@@ -91,14 +91,8 @@ public class Main {
             row = rowStart;
             col = colStart;
 
-            //cannot put an obstacle at starting guard position
-            if ((path.getFirst() == rowStart) && (path.getSecond() == colStart)) {
-                continue;
-            }
-
             //put an obstacle in the path
             grid2[path.getFirst()][path.getSecond()] = '#';
-
             while ((row >= 0) && (row < grid2.length) && (col >= 0) && (col < grid2[0].length)) {
                 final int dx = directions.get(direction).getFirst();
                 final int dy = directions.get(direction).getSecond();
