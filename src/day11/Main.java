@@ -1,5 +1,6 @@
 package day11;
 
+import util.Pair;
 import util.Utility;
 
 import java.io.IOException;
@@ -72,9 +73,9 @@ public class Main {
             final Pair node1 = galaxies.get(i);
             for (int j = i + 1; j < galaxies.size(); j++) {
                 final Pair node2 = galaxies.get(j);
-                final long millionModifiers = emptyRows.stream().filter(index -> index > Math.min(node1.getRow(), node2.getRow()) && index < Math.max(node1.getRow(), node2.getRow())).count()
-                        + emptyCols.stream().filter(index -> index > Math.min(node1.getCol(), node2.getCol()) && index < Math.max(node1.getCol(), node2.getCol())).count();
-                sum += Math.abs(node2.getCol() - node1.getCol()) + Math.abs(node2.getRow() - node1.getRow()) + millionModifiers * 999999;
+                final long millionModifiers = emptyRows.stream().filter(index -> index > Math.min(node1.getFirst(), node2.getFirst()) && index < Math.max(node1.getFirst(), node2.getFirst())).count()
+                        + emptyCols.stream().filter(index -> index > Math.min(node1.getSecond(), node2.getSecond()) && index < Math.max(node1.getSecond(), node2.getSecond())).count();
+                sum += Math.abs(node2.getSecond() - node1.getSecond()) + Math.abs(node2.getFirst() - node1.getFirst()) + millionModifiers * 999999;
             }
         }
 
@@ -140,7 +141,7 @@ public class Main {
             final Pair node1 = galaxies.get(i);
             for (int j = i + 1; j < galaxies.size(); j++) {
                 final Pair node2 = galaxies.get(j);
-                sum += Math.abs(node2.getCol() - node1.getCol()) + Math.abs(node2.getRow() - node1.getRow());
+                sum += Math.abs(node2.getSecond() - node1.getSecond()) + Math.abs(node2.getFirst() - node1.getFirst());
             }
         }
 

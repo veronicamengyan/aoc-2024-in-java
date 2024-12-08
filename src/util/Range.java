@@ -1,4 +1,4 @@
-package day5;
+package util;
 
 public class Range {
     private Long start;

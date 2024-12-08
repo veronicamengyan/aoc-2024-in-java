@@ -1,4 +1,4 @@
-package day8;
+package util;
 
 public class Node {
     private Node left;

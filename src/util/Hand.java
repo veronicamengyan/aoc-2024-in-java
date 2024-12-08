@@ -1,4 +1,4 @@
-package day7;
+package util;
 
 public class Hand {
     private String card;

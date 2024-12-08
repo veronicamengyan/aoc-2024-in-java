@@ -1,4 +1,4 @@
-package day7;
+package util;
 
 import java.util.Comparator;
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package day6;
+package util;
 
 public class Race {
     private int time;
