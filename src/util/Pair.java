@@ -1,19 +1,19 @@
-package day11;
+package util;
 
 public class Pair {
-    private int row;
-    private int col;
+    private int first;
+    private int second;
 
-    public Pair(final int row, final int col) {
-        this.row = row;
-        this.col = col;
+    public Pair(final int first, final int second) {
+        this.first = first;
+        this.second = second;
     }
 
-    public int getRow() {
-        return row;
+    public int getFirst() {
+        return first;
     }
 
-    public int getCol() {
-        return col;
+    public int getSecond() {
+        return second;
     }
 }
