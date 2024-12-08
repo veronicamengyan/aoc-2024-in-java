@@ -18,7 +18,7 @@ public class Utility {
         final List<String> lines = Files.readAllLines(filePath);
         final char[][] grid = new char[lines.size()][lines.get(0).length()];
         for (final String line : lines) {
-            grid[lines.indexOf(line)] = line.toCharArray();
+            grid[lines.indexOf(line)] = line.trim().toCharArray();
         }
         return grid;
     }
@@ -27,5 +27,22 @@ public class Utility {
         final Path filePath = Path.of("src/" + day + "/" + fileName + ".txt");
 
         return Files.readString(filePath);
+    }
+
+    public static long findLCM(final long a, final long b) {
+        // LCM(a, b) = |a * b| / GCD(a, b)
+        return Math.abs(a * b) / calculateGCD(a, b);
+    }
+
+    // Function to calculate GCD using Euclidean algorithm
+    public static long calculateGCD(final long a, final long b) {
+        if (b == 0) {
+            return a;
+        }
+
+        if (a == 0) {
+            return b;
+        }
+        return calculateGCD(Math.max(a, b) % Math.min(a,b), Math.min(a,b));
     }
 }
