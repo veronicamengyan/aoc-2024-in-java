@@ -14,7 +14,7 @@ public class Main {
     }
 
     private static void part1(final String input) {
-        final ArrayList<String> numbers = new ArrayList<>(Arrays.asList(input.split(" ")));
+        final List<String> numbers = Arrays.asList(input.split(" "));
         Map<Long, Long> stoneCount = numbers.stream()
                 .collect(Collectors.groupingBy(
                         Long::parseLong,
