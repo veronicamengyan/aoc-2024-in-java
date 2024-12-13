@@ -30,7 +30,7 @@ public class Main {
         System.out.println(islands.stream().mapToLong(island -> getArea(island) * getSides(island)).sum());
     }
 
-    public static Set<Pair> bfs(final char[][] inputs, final int i, final int j, final Set<Pair> visited, int[][] directions) {
+    public static Set<Pair> bfs(final char[][] inputs, final int i, final int j, final Set<Pair> visited, final int[][] directions) {
         visited.add(new Pair(i, j));
         final Set<Pair> island = new HashSet<>();
         final Queue<Pair> queue = new LinkedList<>();
@@ -78,10 +78,10 @@ public class Main {
     }
 
     public static int getCorners(final int x, final int y, final Set<Pair> island) {
-        int[][] SW = {{1, 0}, {0, -1}, {1, -1}}; //last one is diagonal
-        int[][] SE = {{1, 0}, {0, 1}, {1, 1}};
-        int[][] NW = {{-1, 0}, {0, -1}, {-1, -1}};
-        int[][] NE = {{-1, 0}, {0, 1}, {-1, 1}};
+        final int[][] SW = {{1, 0}, {0, -1}, {1, -1}}; //last one is diagonal
+        final int[][] SE = {{1, 0}, {0, 1}, {1, 1}};
+        final int[][] NW = {{-1, 0}, {0, -1}, {-1, -1}};
+        final int[][] NE = {{-1, 0}, {0, 1}, {-1, 1}};
         return isCorner(x, y, island, SW) + isCorner(x, y, island, SE) + isCorner(x, y, island, NW) + isCorner(x, y, island, NE);
     }
 
