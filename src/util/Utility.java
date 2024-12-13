@@ -17,8 +17,8 @@ public class Utility {
         final Path filePath = Path.of("src/" + day + "/" + fileName + ".txt");
         final List<String> lines = Files.readAllLines(filePath);
         final char[][] grid = new char[lines.size()][lines.get(0).length()];
-        for (final String line : lines) {
-            grid[lines.indexOf(line)] = line.trim().toCharArray();
+        for (int i = 0; i < lines.size(); i++) {
+            grid[i] = lines.get(i).trim().toCharArray();
         }
         return grid;
     }
