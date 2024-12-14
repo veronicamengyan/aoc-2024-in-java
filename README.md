@@ -1,8 +1,8 @@
 # aoc-2024-in-java
 
-Welcome to the Advent of Code[^aoc] Java project created by [veronicamengyan][github].
+Welcome to the Advent of Code[^aoc] Java project created by [Veronica Lusby][github].
 
-In this repository, veronicamengyan is about to provide solutions for the puzzles using Java language.
+In this repository, Veronica is about to provide solutions for the puzzles using Java language.
 
 
 [^aoc]:
