@@ -1,4 +1,4 @@
-# aoc-2023-in-java
+# aoc-2024-in-java
 
 Welcome to the Advent of Code[^aoc] Java project created by [veronicamengyan][github].
 
